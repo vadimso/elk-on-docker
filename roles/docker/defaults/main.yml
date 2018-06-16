@@ -1,0 +1,12 @@
+---
+
+packages_preparation:
+  - docker
+  - libudev1 
+  - libdevmapper-event1.02.1
+ # - device-mapper-libs
+ # - device-mapper-event-libs
+
+pip_dependencies:
+  - docker-pycreds
+  - dockerpty

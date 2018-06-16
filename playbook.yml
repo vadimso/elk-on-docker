@@ -1,0 +1,18 @@
+- hosts: servers
+  become: true
+
+  tasks:
+- name: log into docker hub registry
+  docker_login: https://hub.docker.com/login/
+  email: "vadim.sohin@gmail.com"
+  username: "vadimso"
+  password: "500S600s!"
+
+- name: ensure a container is running
+  docker_container:
+  name: my_container
+  state: started
+  image: "vadimso/bigid"
+  pull: true
+  ports:
+       - "5000:5000"

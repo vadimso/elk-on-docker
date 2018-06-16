@@ -1,0 +1,31 @@
+---
+
+# Playbook to deploy a Dockerized ELK stack
+
+- name: Deploy ec2 instance
+  gather_facts: false
+  hosts: 127.0.0.1
+  connection: local
+  tags:
+    - deploy
+
+- name: Deploy Elk Server
+  hosts: 127.0.0.1
+  connection: local
+  become: yes
+  become_user: root
+  roles:
+    - docker
+    - elk-docker
+  tags: 
+    - elk
+
+- name: Deploy Filebeat
+  hosts: 127.0.0.1
+  connection: local
+  become: yes
+  become_user: root
+  roles:
+    - filebeat
+  tags:
+    - filebeat

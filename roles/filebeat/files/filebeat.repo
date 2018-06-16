@@ -1,0 +1,48 @@
+#[elastic-6.x]
+#name=Elastic repository for 6.x packages
+#baseurl=https://artifacts.elastic.co/packages/6.x/apt stable main
+#gpgcheck=1
+#gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+#enabled=1
+#autorefresh=1
+#type=deb
+#state: present
+#    update_cache: yes
+
+--
+- name: ensure apt-transport-https installed
+  apt:
+    pkg: apt-transport-https
+    state: present
+
+- name: add elasticstack GPG key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: add elasticstack repository
+  apt_repository:
+    repo: deb https://artifacts.elastic.co/packages/5.x/apt stable main
+    state: present
+    update_cache: yes
+
+- name: install filebeat
+  apt:
+    pkg: filebeat
+    state: "{{ filebeat_install_state }}"
+
+- name: copy filebeat configuration
+  template:
+    src: filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+    owner: root
+    group: root
+    mode: 0644
+    validate: /usr/bin/filebeat.sh -c %s -configtest
+  notify: restart filebeat
+
+- name: start and enable filebeat
+  service:
+    name: filebeat
+    state: started
+    enabled: yes
