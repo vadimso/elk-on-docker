@@ -1,0 +1,24 @@
+- input_type: log
+  paths:
+     - /var/lib/docker/containers/*/*-json.log
+  json.message_key: log
+
+processors:
+   - add_docker_metadata: ~
+
+
+
+   filebeat.prospectors:
+- type: log
+  paths:
+   - '/var/lib/docker/containers/*/*.log'
+  json.message_key: log
+  json.keys_under_root: true
+  multiline.pattern: '^[[:space:]]+|^Caused by:'
+  multiline.negate: false
+  multiline.match: after
+  tail_files: true
+  processors:
+  - add_docker_metadata: ~
+output.logstash:
+  hosts: ["127.0.0.1:5044"]
