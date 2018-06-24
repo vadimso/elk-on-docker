@@ -12,6 +12,9 @@ processors:
 - type: log
   paths:
    - '/var/lib/docker/containers/*/*.log'
+    - /var/log/*.log
+    input_type: log
+  document_type: syslog
   json.message_key: log
   json.keys_under_root: true
   multiline.pattern: '^[[:space:]]+|^Caused by:'
